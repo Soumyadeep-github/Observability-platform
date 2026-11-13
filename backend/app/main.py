@@ -53,7 +53,7 @@ class IncidentUpdate(BaseModel):
 
 
 def create_app(db_path=None, marquez_gateway=None):
-    app = FastAPI(title="Signal Observability POC", version="0.1.0",
+    app = FastAPI(title="Signal Observability POC", version="1.0.0",
                   description="Local demo: fixed clock, SQLite persistence, no live connectors or authentication.")
     path = str(db_path or os.environ.get("OBSERVABILITY_DB", Path(__file__).parents[1] / "demo.sqlite3"))
 

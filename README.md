@@ -1,4 +1,4 @@
-# Observability platform
+# Observability platform · v1.0.0
 
 A local data observability POC with a **Python FastAPI backend** and a **React + TypeScript UI**. The original architecture and security proposals remain below.
 
