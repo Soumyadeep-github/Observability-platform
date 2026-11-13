@@ -3,7 +3,8 @@ from xml.etree import ElementTree as E
 from html import escape
 import json
 
-OUT=Path(__file__).parent
+OUT=Path(__file__).resolve().parents[1] / 'docs' / 'design' / 'diagrams'
+OUT.mkdir(parents=True, exist_ok=True)
 pages=[]
 def page(name,title,subtitle,w=1600,h=1250):
     p={'name':name,'title':title,'subtitle':subtitle,'w':w,'h':h,'nodes':[],'edges':[],'bands':[]}
@@ -114,6 +115,6 @@ svgs=[svg(p) for p in pages]
 for name,data in zip(['release1_architecture.svg','release1_availability.svg'],svgs):(OUT/name).write_text(data)
 html='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Release 1 architecture</title><style>body{margin:0;background:#edf1f6;color:#25334a;font:16px Arial,sans-serif}header{padding:24px 32px;background:#14243b;color:white}h1{margin:0 0 10px;font-size:26px}p{line-height:1.5}main{max-width:1600px;margin:24px auto;padding:0 16px}section{background:white;margin-bottom:24px;border-radius:12px;overflow:auto;box-shadow:0 2px 12px #12203812}svg{width:100%;height:auto;min-width:950px;display:block}.note{padding:0 20px 12px;color:#536176}@media print{header{background:white;color:black}section{break-after:page;box-shadow:none}svg{min-width:0}}</style><header><h1>Data observability · Release 1 design</h1><p>View offline in any modern browser. Scroll horizontally on a small screen, or use browser zoom. Two editable pages are in the companion .drawio file.</p><p>Edit: open app.diagrams.net → File → Open From → Device → release1_architecture.drawio. Export SVG after edits. The SVG files also embed the diagram source.</p></header><main>'''
 for data in svgs:html+='<section>'+data+'</section>'
-html+='<p class="note">Design only. No containers, charts or connector code have been implemented. See release1_design.md for contracts, capability limits, security and release gates.</p></main></html>'
+html+='<p class="note">Design only. No containers, charts or connector code have been implemented. See ../release1_design.md for contracts, capability limits, security and release gates.</p></main></html>'
 (OUT/'release1_viewer.html').write_text(html)
 print(json.dumps({'pages':len(pages),'nodes':[len(p['nodes']) for p in pages],'edges':[len(p['edges']) for p in pages]}))

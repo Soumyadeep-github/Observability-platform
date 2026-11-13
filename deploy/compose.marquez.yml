@@ -1,0 +1,45 @@
+# Optional upstream services. The application backend remains Python.
+# Tested upstream contract baseline: Marquez 0.50.0 / OpenLineage schema 2-0-2.
+# This compose profile has not been executed on the development machine (no Docker).
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: marquez
+      POSTGRES_USER: marquez
+      POSTGRES_PASSWORD: marquez-local-demo
+    volumes:
+      - marquez-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marquez -d marquez"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  marquez:
+    image: marquezproject/marquez:0.50.0
+    environment:
+      MARQUEZ_CONFIG: /opt/marquez/poc.yml
+      POSTGRES_HOST: db
+      MARQUEZ_PORT: '5000'
+      MARQUEZ_ADMIN_PORT: '5001'
+    volumes:
+      - ./marquez.yml:/opt/marquez/poc.yml:ro
+    ports:
+      - '127.0.0.1:5002:5000'
+      - '127.0.0.1:5003:5001'
+    depends_on:
+      db:
+        condition: service_healthy
+  marquez-web:
+    image: marquezproject/marquez-web:0.50.0
+    environment:
+      MARQUEZ_HOST: marquez
+      MARQUEZ_PORT: '5000'
+      WEB_PORT: '3000'
+      REACT_APP_ADVANCED_SEARCH: 'false'
+    ports:
+      - '127.0.0.1:3000:3000'
+    depends_on:
+      - marquez
+volumes:
+  marquez-data:

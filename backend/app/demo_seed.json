@@ -1,0 +1,525 @@
+{
+  "version": 1,
+  "now": "2026-11-01T12:00:00.000Z",
+  "assets": [
+    {
+      "id": "orders",
+      "name": "fct_orders",
+      "namespace": "analytics.commerce",
+      "source": "BigQuery",
+      "owner": "Commerce",
+      "rows": "2.4M",
+      "freshnessMinutes": 60,
+      "monitorAvailable": true,
+      "description": "Order-level revenue and payment facts. Feeds daily revenue and the executive dashboard.",
+      "publishedAt": "2026-11-01T10:18:00.000Z",
+      "upstream": [],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "FAIL",
+          "value": "124 invalid rows \u00b7 0.4%"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "revenue",
+      "name": "daily_revenue",
+      "namespace": "analytics.finance",
+      "source": "BigQuery",
+      "owner": "Finance",
+      "rows": "18.2K",
+      "freshnessMinutes": 60,
+      "monitorAvailable": true,
+      "description": "Daily aggregated revenue by market and channel.",
+      "publishedAt": "2026-11-01T10:25:00.000Z",
+      "upstream": [
+        "orders"
+      ],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "PASS",
+          "value": "0 invalid rows"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "customers",
+      "name": "dim_customers",
+      "namespace": "analytics.core",
+      "source": "BigQuery",
+      "owner": "Growth",
+      "rows": "846K",
+      "freshnessMinutes": 120,
+      "monitorAvailable": true,
+      "description": "Customer profiles and lifecycle attributes.",
+      "publishedAt": "2026-11-01T11:48:00.000Z",
+      "upstream": [],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "PASS",
+          "value": "0 invalid rows"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "name": "checkout_events",
+      "namespace": "streaming.production",
+      "source": "Kafka",
+      "owner": "Commerce",
+      "rows": "12.8M",
+      "freshnessMinutes": 5,
+      "monitorAvailable": true,
+      "description": "Checkout events from the production event stream.",
+      "publishedAt": "2026-11-01T11:59:00.000Z",
+      "upstream": [],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "PASS",
+          "value": "0 invalid rows"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "payments",
+      "name": "payments",
+      "namespace": "operational.public",
+      "source": "PostgreSQL",
+      "owner": "Payments",
+      "rows": "3.1M",
+      "freshnessMinutes": 30,
+      "monitorAvailable": true,
+      "description": "Committed payment transactions from the operational store.",
+      "publishedAt": "2026-11-01T11:51:00.000Z",
+      "upstream": [],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "PASS",
+          "value": "0 invalid rows"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "name": "web_sessions",
+      "namespace": "analytics.product",
+      "source": "BigQuery",
+      "owner": "Product",
+      "rows": "6.2M",
+      "freshnessMinutes": 60,
+      "monitorAvailable": true,
+      "description": "Sessionized web activity for product analytics.",
+      "publishedAt": "2026-11-01T11:12:00.000Z",
+      "upstream": [
+        "events"
+      ],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "ERROR",
+          "value": "Collector query timed out"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "inventory",
+      "name": "inventory_snapshot",
+      "namespace": "supply_chain.public",
+      "source": "Spanner",
+      "owner": "Operations",
+      "rows": "214K",
+      "freshnessMinutes": 60,
+      "monitorAvailable": false,
+      "description": "Latest inventory by warehouse; collector currently unavailable.",
+      "publishedAt": null,
+      "upstream": [],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "PASS",
+          "value": "0 invalid rows"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "name": "executive_metrics",
+      "namespace": "analytics.reporting",
+      "source": "BigQuery",
+      "owner": "Finance",
+      "rows": "1.2K",
+      "freshnessMinutes": 120,
+      "monitorAvailable": true,
+      "description": "Curated business metrics for the executive dashboard.",
+      "publishedAt": "2026-11-01T11:45:00.000Z",
+      "upstream": [
+        "revenue",
+        "customers"
+      ],
+      "lineageCoverage": "declared",
+      "checks": [
+        {
+          "id": "not-null",
+          "name": "Primary key is not null",
+          "column": "id",
+          "status": "PASS",
+          "value": "0 null values"
+        },
+        {
+          "id": "unique",
+          "name": "Primary key is unique",
+          "column": "id",
+          "status": "PASS",
+          "value": "100% unique"
+        },
+        {
+          "id": "range",
+          "name": "Amount is non-negative",
+          "column": "amount",
+          "status": "PASS",
+          "value": "0 invalid rows"
+        }
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "STRING",
+          "nullable": false
+        },
+        {
+          "name": "created_at",
+          "type": "TIMESTAMP",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "NUMERIC",
+          "nullable": true
+        },
+        {
+          "name": "region",
+          "type": "STRING",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "incidents": [
+    {
+      "id": "INC-1042",
+      "assetId": "orders",
+      "title": "Freshness threshold exceeded",
+      "severity": "critical",
+      "dimension": "Freshness",
+      "openedAt": "2026-11-01T11:18:00Z",
+      "state": "open"
+    },
+    {
+      "id": "INC-1041",
+      "assetId": "orders",
+      "title": "Negative order amounts detected",
+      "severity": "critical",
+      "dimension": "Quality",
+      "openedAt": "2026-11-01T11:27:00Z",
+      "state": "open",
+      "column": "amount"
+    },
+    {
+      "id": "INC-1040",
+      "assetId": "revenue",
+      "title": "Daily revenue publication is late",
+      "severity": "critical",
+      "dimension": "Freshness",
+      "openedAt": "2026-11-01T11:25:00Z",
+      "state": "acknowledged"
+    },
+    {
+      "id": "INC-1039",
+      "assetId": "sessions",
+      "title": "Quality check execution failed",
+      "severity": "warning",
+      "dimension": "Monitor",
+      "openedAt": "2026-11-01T11:45:00Z",
+      "state": "open",
+      "column": "amount"
+    }
+  ]
+}

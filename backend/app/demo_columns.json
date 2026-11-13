@@ -1,0 +1,581 @@
+{
+  "graph": [
+    {
+      "id": "datasetField:analytics.commerce:fct_orders:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.commerce",
+        "dataset": "fct_orders",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:id",
+          "destination": "datasetField:analytics.finance:daily_revenue:id"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.commerce:fct_orders:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.commerce",
+        "dataset": "fct_orders",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:created_at",
+          "destination": "datasetField:analytics.finance:daily_revenue:created_at"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.commerce:fct_orders:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.commerce",
+        "dataset": "fct_orders",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:amount",
+          "destination": "datasetField:analytics.finance:daily_revenue:amount"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.commerce:fct_orders:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.commerce",
+        "dataset": "fct_orders",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:region",
+          "destination": "datasetField:analytics.finance:daily_revenue:region"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.finance:daily_revenue:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.finance",
+        "dataset": "daily_revenue",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": "IDENTITY",
+        "transformationDescription": "Copy order identifier"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:id",
+          "destination": "datasetField:analytics.finance:daily_revenue:id"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:id",
+          "destination": "datasetField:analytics.reporting:executive_metrics:id"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.finance:daily_revenue:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.finance",
+        "dataset": "daily_revenue",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": "TRANSFORMATION",
+        "transformationDescription": "TIMESTAMP_TRUNC(created_at, DAY)"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:created_at",
+          "destination": "datasetField:analytics.finance:daily_revenue:created_at"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:created_at",
+          "destination": "datasetField:analytics.reporting:executive_metrics:created_at"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.finance:daily_revenue:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.finance",
+        "dataset": "daily_revenue",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": "AGGREGATION",
+        "transformationDescription": "SUM(amount)"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:amount",
+          "destination": "datasetField:analytics.finance:daily_revenue:amount"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:amount",
+          "destination": "datasetField:analytics.reporting:executive_metrics:amount"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.finance:daily_revenue:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.finance",
+        "dataset": "daily_revenue",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": "IDENTITY",
+        "transformationDescription": "Group by region"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.commerce:fct_orders:region",
+          "destination": "datasetField:analytics.finance:daily_revenue:region"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:region",
+          "destination": "datasetField:analytics.reporting:executive_metrics:region"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:analytics.core:dim_customers:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.core",
+        "dataset": "dim_customers",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.core:dim_customers:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.core",
+        "dataset": "dim_customers",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.core:dim_customers:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.core",
+        "dataset": "dim_customers",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.core:dim_customers:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.core",
+        "dataset": "dim_customers",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:analytics.core:dim_customers:region",
+          "destination": "datasetField:analytics.reporting:executive_metrics:region"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:streaming.production:checkout_events:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "streaming.production",
+        "dataset": "checkout_events",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:id",
+          "destination": "datasetField:analytics.product:web_sessions:id"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:streaming.production:checkout_events:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "streaming.production",
+        "dataset": "checkout_events",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:created_at",
+          "destination": "datasetField:analytics.product:web_sessions:created_at"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:streaming.production:checkout_events:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "streaming.production",
+        "dataset": "checkout_events",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:amount",
+          "destination": "datasetField:analytics.product:web_sessions:amount"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:streaming.production:checkout_events:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "streaming.production",
+        "dataset": "checkout_events",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:region",
+          "destination": "datasetField:analytics.product:web_sessions:region"
+        }
+      ]
+    },
+    {
+      "id": "datasetField:operational.public:payments:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "operational.public",
+        "dataset": "payments",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:operational.public:payments:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "operational.public",
+        "dataset": "payments",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:operational.public:payments:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "operational.public",
+        "dataset": "payments",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:operational.public:payments:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "operational.public",
+        "dataset": "payments",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.product:web_sessions:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.product",
+        "dataset": "web_sessions",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": "IDENTITY",
+        "transformationDescription": "Copy event identifier"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:id",
+          "destination": "datasetField:analytics.product:web_sessions:id"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.product:web_sessions:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.product",
+        "dataset": "web_sessions",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": "TRANSFORMATION",
+        "transformationDescription": "Session start timestamp"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:created_at",
+          "destination": "datasetField:analytics.product:web_sessions:created_at"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.product:web_sessions:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.product",
+        "dataset": "web_sessions",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": "AGGREGATION",
+        "transformationDescription": "SUM(amount) per session"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:amount",
+          "destination": "datasetField:analytics.product:web_sessions:amount"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.product:web_sessions:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.product",
+        "dataset": "web_sessions",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": "IDENTITY",
+        "transformationDescription": "Copy event region"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:streaming.production:checkout_events:region",
+          "destination": "datasetField:analytics.product:web_sessions:region"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:supply_chain.public:inventory_snapshot:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "supply_chain.public",
+        "dataset": "inventory_snapshot",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:supply_chain.public:inventory_snapshot:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "supply_chain.public",
+        "dataset": "inventory_snapshot",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:supply_chain.public:inventory_snapshot:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "supply_chain.public",
+        "dataset": "inventory_snapshot",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:supply_chain.public:inventory_snapshot:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "supply_chain.public",
+        "dataset": "inventory_snapshot",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": null,
+        "transformationDescription": null
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.reporting:executive_metrics:id",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.reporting",
+        "dataset": "executive_metrics",
+        "field": "id",
+        "fieldType": "STRING",
+        "transformationType": "IDENTITY",
+        "transformationDescription": "Copy reporting identifier"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:id",
+          "destination": "datasetField:analytics.reporting:executive_metrics:id"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.reporting:executive_metrics:created_at",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.reporting",
+        "dataset": "executive_metrics",
+        "field": "created_at",
+        "fieldType": "TIMESTAMP",
+        "transformationType": "IDENTITY",
+        "transformationDescription": "Copy reporting timestamp"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:created_at",
+          "destination": "datasetField:analytics.reporting:executive_metrics:created_at"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.reporting:executive_metrics:amount",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.reporting",
+        "dataset": "executive_metrics",
+        "field": "amount",
+        "fieldType": "NUMERIC",
+        "transformationType": "AGGREGATION",
+        "transformationDescription": "SUM(daily_revenue.amount)"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:amount",
+          "destination": "datasetField:analytics.reporting:executive_metrics:amount"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "datasetField:analytics.reporting:executive_metrics:region",
+      "type": "DATASET_FIELD",
+      "data": {
+        "namespace": "analytics.reporting",
+        "dataset": "executive_metrics",
+        "field": "region",
+        "fieldType": "STRING",
+        "transformationType": "TRANSFORMATION",
+        "transformationDescription": "COALESCE(daily_revenue.region, dim_customers.region)"
+      },
+      "inEdges": [
+        {
+          "origin": "datasetField:analytics.finance:daily_revenue:region",
+          "destination": "datasetField:analytics.reporting:executive_metrics:region"
+        },
+        {
+          "origin": "datasetField:analytics.core:dim_customers:region",
+          "destination": "datasetField:analytics.reporting:executive_metrics:region"
+        }
+      ],
+      "outEdges": []
+    }
+  ]
+}

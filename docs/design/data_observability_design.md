@@ -1,12 +1,14 @@
 # Data observability platform architecture
 
+> Historical design proposal. For the implemented POC and current run instructions, see the [project README](../../README.md).
+
 28 October 2026 | Version 1.1
 
 ## Architecture overview
 
 The application exposes native protocols and routes them through shared authorization and domain services. PostgreSQL owns both durable observations and historical state. Background workers evaluate deadlines even when no events arrive. Catalog synchronization is optional and asynchronous.
 
-The editable Mermaid diagram below is self-contained. The companion `architecture.svg` and `architecture.png` provide a presentation-ready view when downloaded beside this document.
+The editable Mermaid diagram below is self-contained. The companion `diagrams/architecture.svg` and `diagrams/architecture.png` provide a presentation-ready view when opened from the diagrams subfolder.
 
 ```mermaid
 flowchart TD
@@ -389,6 +391,6 @@ Illustrative PostgreSQL lease claim: SELECT id FROM task_queue WHERE available_a
 
 ## Related downloadable assets
 
-- `architecture.svg` is the editable vector export.
-- `architecture.png` is the high-resolution raster export.
+- `diagrams/architecture.svg` is the editable vector export.
+- `diagrams/architecture.png` is the high-resolution raster export.
 - The Mermaid blocks above remain editable without the companion files.

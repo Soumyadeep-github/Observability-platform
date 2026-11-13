@@ -1,0 +1,402 @@
+{
+  "graph": [
+    {
+      "id": "dataset:analytics.commerce:fct_orders",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "analytics.commerce",
+          "name": "fct_orders"
+        },
+        "namespace": "analytics.commerce",
+        "name": "fct_orders",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Order-level revenue and payment facts. Feeds daily revenue and the executive dashboard.",
+        "sourceName": "BigQuery"
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "dataset:analytics.commerce:fct_orders",
+          "destination": "job:signal.demo:build_daily_revenue"
+        }
+      ]
+    },
+    {
+      "id": "dataset:analytics.finance:daily_revenue",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "analytics.finance",
+          "name": "daily_revenue"
+        },
+        "namespace": "analytics.finance",
+        "name": "daily_revenue",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Daily aggregated revenue by market and channel.",
+        "sourceName": "BigQuery"
+      },
+      "inEdges": [
+        {
+          "origin": "job:signal.demo:build_daily_revenue",
+          "destination": "dataset:analytics.finance:daily_revenue"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "dataset:analytics.finance:daily_revenue",
+          "destination": "job:signal.demo:build_executive_metrics"
+        }
+      ]
+    },
+    {
+      "id": "dataset:analytics.core:dim_customers",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "analytics.core",
+          "name": "dim_customers"
+        },
+        "namespace": "analytics.core",
+        "name": "dim_customers",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Customer profiles and lifecycle attributes.",
+        "sourceName": "BigQuery"
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "dataset:analytics.core:dim_customers",
+          "destination": "job:signal.demo:build_executive_metrics"
+        }
+      ]
+    },
+    {
+      "id": "dataset:streaming.production:checkout_events",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "streaming.production",
+          "name": "checkout_events"
+        },
+        "namespace": "streaming.production",
+        "name": "checkout_events",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Checkout events from the production event stream.",
+        "sourceName": "Kafka"
+      },
+      "inEdges": [],
+      "outEdges": [
+        {
+          "origin": "dataset:streaming.production:checkout_events",
+          "destination": "job:signal.demo:build_web_sessions"
+        }
+      ]
+    },
+    {
+      "id": "dataset:operational.public:payments",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "operational.public",
+          "name": "payments"
+        },
+        "namespace": "operational.public",
+        "name": "payments",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Committed payment transactions from the operational store.",
+        "sourceName": "PostgreSQL"
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "dataset:analytics.product:web_sessions",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "analytics.product",
+          "name": "web_sessions"
+        },
+        "namespace": "analytics.product",
+        "name": "web_sessions",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Sessionized web activity for product analytics.",
+        "sourceName": "BigQuery"
+      },
+      "inEdges": [
+        {
+          "origin": "job:signal.demo:build_web_sessions",
+          "destination": "dataset:analytics.product:web_sessions"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "dataset:supply_chain.public:inventory_snapshot",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "supply_chain.public",
+          "name": "inventory_snapshot"
+        },
+        "namespace": "supply_chain.public",
+        "name": "inventory_snapshot",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Latest inventory by warehouse; collector currently unavailable.",
+        "sourceName": "Spanner"
+      },
+      "inEdges": [],
+      "outEdges": []
+    },
+    {
+      "id": "dataset:analytics.reporting:executive_metrics",
+      "type": "DATASET",
+      "data": {
+        "id": {
+          "namespace": "analytics.reporting",
+          "name": "executive_metrics"
+        },
+        "namespace": "analytics.reporting",
+        "name": "executive_metrics",
+        "fields": [
+          {
+            "name": "id",
+            "type": "STRING"
+          },
+          {
+            "name": "created_at",
+            "type": "TIMESTAMP"
+          },
+          {
+            "name": "amount",
+            "type": "NUMERIC"
+          },
+          {
+            "name": "region",
+            "type": "STRING"
+          }
+        ],
+        "description": "Curated business metrics for the executive dashboard.",
+        "sourceName": "BigQuery"
+      },
+      "inEdges": [
+        {
+          "origin": "job:signal.demo:build_executive_metrics",
+          "destination": "dataset:analytics.reporting:executive_metrics"
+        }
+      ],
+      "outEdges": []
+    },
+    {
+      "id": "job:signal.demo:build_daily_revenue",
+      "type": "JOB",
+      "data": {
+        "id": {
+          "namespace": "signal.demo",
+          "name": "build_daily_revenue"
+        },
+        "namespace": "signal.demo",
+        "name": "build_daily_revenue",
+        "description": "Sample transformation generated with the OpenLineage Python SDK.",
+        "latestRun": {
+          "id": "4a60441a-417c-52b1-a8b7-cb3936e7e6f1",
+          "state": "COMPLETED"
+        }
+      },
+      "inEdges": [
+        {
+          "origin": "dataset:analytics.commerce:fct_orders",
+          "destination": "job:signal.demo:build_daily_revenue"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "job:signal.demo:build_daily_revenue",
+          "destination": "dataset:analytics.finance:daily_revenue"
+        }
+      ]
+    },
+    {
+      "id": "job:signal.demo:build_web_sessions",
+      "type": "JOB",
+      "data": {
+        "id": {
+          "namespace": "signal.demo",
+          "name": "build_web_sessions"
+        },
+        "namespace": "signal.demo",
+        "name": "build_web_sessions",
+        "description": "Sample transformation generated with the OpenLineage Python SDK.",
+        "latestRun": {
+          "id": "200e5cf9-1c17-573b-8bd5-e392b1284968",
+          "state": "COMPLETED"
+        }
+      },
+      "inEdges": [
+        {
+          "origin": "dataset:streaming.production:checkout_events",
+          "destination": "job:signal.demo:build_web_sessions"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "job:signal.demo:build_web_sessions",
+          "destination": "dataset:analytics.product:web_sessions"
+        }
+      ]
+    },
+    {
+      "id": "job:signal.demo:build_executive_metrics",
+      "type": "JOB",
+      "data": {
+        "id": {
+          "namespace": "signal.demo",
+          "name": "build_executive_metrics"
+        },
+        "namespace": "signal.demo",
+        "name": "build_executive_metrics",
+        "description": "Sample transformation generated with the OpenLineage Python SDK.",
+        "latestRun": {
+          "id": "bf182a58-531a-5a80-aca1-f79e985e3783",
+          "state": "COMPLETED"
+        }
+      },
+      "inEdges": [
+        {
+          "origin": "dataset:analytics.finance:daily_revenue",
+          "destination": "job:signal.demo:build_executive_metrics"
+        },
+        {
+          "origin": "dataset:analytics.core:dim_customers",
+          "destination": "job:signal.demo:build_executive_metrics"
+        }
+      ],
+      "outEdges": [
+        {
+          "origin": "job:signal.demo:build_executive_metrics",
+          "destination": "dataset:analytics.reporting:executive_metrics"
+        }
+      ]
+    }
+  ]
+}
