@@ -1,5 +1,7 @@
 # Cloud-native security design
 
+> Historical design proposal. For the implemented POC and current run instructions, see the [project README](../../README.md).
+
 Date: 29 October 2026  
 Status: proposed design guidance; controls are not yet implemented or verified.
 

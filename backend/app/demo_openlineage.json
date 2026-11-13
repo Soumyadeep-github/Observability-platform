@@ -1,0 +1,461 @@
+[
+  {
+    "eventTime": "2026-11-01T12:00:00.000Z",
+    "eventType": "COMPLETE",
+    "inputs": [
+      {
+        "facets": {
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "inputFacets": {},
+        "name": "fct_orders",
+        "namespace": "analytics.commerce"
+      }
+    ],
+    "job": {
+      "facets": {},
+      "name": "build_daily_revenue",
+      "namespace": "signal.demo"
+    },
+    "outputs": [
+      {
+        "facets": {
+          "columnLineage": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-2-0/ColumnLineageDatasetFacet.json#/$defs/ColumnLineageDatasetFacet",
+            "dataset": [],
+            "fields": {
+              "amount": {
+                "inputFields": [
+                  {
+                    "field": "amount",
+                    "name": "fct_orders",
+                    "namespace": "analytics.commerce",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "SUM(amount)",
+                "transformationType": "AGGREGATION"
+              },
+              "created_at": {
+                "inputFields": [
+                  {
+                    "field": "created_at",
+                    "name": "fct_orders",
+                    "namespace": "analytics.commerce",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "TIMESTAMP_TRUNC(created_at, DAY)",
+                "transformationType": "TRANSFORMATION"
+              },
+              "id": {
+                "inputFields": [
+                  {
+                    "field": "id",
+                    "name": "fct_orders",
+                    "namespace": "analytics.commerce",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Copy order identifier",
+                "transformationType": "IDENTITY"
+              },
+              "region": {
+                "inputFields": [
+                  {
+                    "field": "region",
+                    "name": "fct_orders",
+                    "namespace": "analytics.commerce",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Group by region",
+                "transformationType": "IDENTITY"
+              }
+            }
+          },
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "name": "daily_revenue",
+        "namespace": "analytics.finance",
+        "outputFacets": {}
+      }
+    ],
+    "producer": "https://github.com/Soumyadeep-github/Observability-platform",
+    "run": {
+      "facets": {},
+      "runId": "4a60441a-417c-52b1-a8b7-cb3936e7e6f1"
+    },
+    "schemaURL": "https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent"
+  },
+  {
+    "eventTime": "2026-11-01T12:00:00.000Z",
+    "eventType": "COMPLETE",
+    "inputs": [
+      {
+        "facets": {
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "inputFacets": {},
+        "name": "checkout_events",
+        "namespace": "streaming.production"
+      }
+    ],
+    "job": {
+      "facets": {},
+      "name": "build_web_sessions",
+      "namespace": "signal.demo"
+    },
+    "outputs": [
+      {
+        "facets": {
+          "columnLineage": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-2-0/ColumnLineageDatasetFacet.json#/$defs/ColumnLineageDatasetFacet",
+            "dataset": [],
+            "fields": {
+              "amount": {
+                "inputFields": [
+                  {
+                    "field": "amount",
+                    "name": "checkout_events",
+                    "namespace": "streaming.production",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "SUM(amount) per session",
+                "transformationType": "AGGREGATION"
+              },
+              "created_at": {
+                "inputFields": [
+                  {
+                    "field": "created_at",
+                    "name": "checkout_events",
+                    "namespace": "streaming.production",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Session start timestamp",
+                "transformationType": "TRANSFORMATION"
+              },
+              "id": {
+                "inputFields": [
+                  {
+                    "field": "id",
+                    "name": "checkout_events",
+                    "namespace": "streaming.production",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Copy event identifier",
+                "transformationType": "IDENTITY"
+              },
+              "region": {
+                "inputFields": [
+                  {
+                    "field": "region",
+                    "name": "checkout_events",
+                    "namespace": "streaming.production",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Copy event region",
+                "transformationType": "IDENTITY"
+              }
+            }
+          },
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "name": "web_sessions",
+        "namespace": "analytics.product",
+        "outputFacets": {}
+      }
+    ],
+    "producer": "https://github.com/Soumyadeep-github/Observability-platform",
+    "run": {
+      "facets": {},
+      "runId": "200e5cf9-1c17-573b-8bd5-e392b1284968"
+    },
+    "schemaURL": "https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent"
+  },
+  {
+    "eventTime": "2026-11-01T12:00:00.000Z",
+    "eventType": "COMPLETE",
+    "inputs": [
+      {
+        "facets": {
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "inputFacets": {},
+        "name": "daily_revenue",
+        "namespace": "analytics.finance"
+      },
+      {
+        "facets": {
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "inputFacets": {},
+        "name": "dim_customers",
+        "namespace": "analytics.core"
+      }
+    ],
+    "job": {
+      "facets": {},
+      "name": "build_executive_metrics",
+      "namespace": "signal.demo"
+    },
+    "outputs": [
+      {
+        "facets": {
+          "columnLineage": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-2-0/ColumnLineageDatasetFacet.json#/$defs/ColumnLineageDatasetFacet",
+            "dataset": [],
+            "fields": {
+              "amount": {
+                "inputFields": [
+                  {
+                    "field": "amount",
+                    "name": "daily_revenue",
+                    "namespace": "analytics.finance",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "SUM(daily_revenue.amount)",
+                "transformationType": "AGGREGATION"
+              },
+              "created_at": {
+                "inputFields": [
+                  {
+                    "field": "created_at",
+                    "name": "daily_revenue",
+                    "namespace": "analytics.finance",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Copy reporting timestamp",
+                "transformationType": "IDENTITY"
+              },
+              "id": {
+                "inputFields": [
+                  {
+                    "field": "id",
+                    "name": "daily_revenue",
+                    "namespace": "analytics.finance",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "Copy reporting identifier",
+                "transformationType": "IDENTITY"
+              },
+              "region": {
+                "inputFields": [
+                  {
+                    "field": "region",
+                    "name": "daily_revenue",
+                    "namespace": "analytics.finance",
+                    "transformations": []
+                  },
+                  {
+                    "field": "region",
+                    "name": "dim_customers",
+                    "namespace": "analytics.core",
+                    "transformations": []
+                  }
+                ],
+                "transformationDescription": "COALESCE(daily_revenue.region, dim_customers.region)",
+                "transformationType": "TRANSFORMATION"
+              }
+            }
+          },
+          "schema": {
+            "_producer": "https://github.com/Soumyadeep-github/Observability-platform",
+            "_schemaURL": "https://openlineage.io/spec/facets/1-1-1/SchemaDatasetFacet.json#/$defs/SchemaDatasetFacet",
+            "fields": [
+              {
+                "fields": [],
+                "name": "id",
+                "type": "STRING"
+              },
+              {
+                "fields": [],
+                "name": "created_at",
+                "type": "TIMESTAMP"
+              },
+              {
+                "fields": [],
+                "name": "amount",
+                "type": "NUMERIC"
+              },
+              {
+                "fields": [],
+                "name": "region",
+                "type": "STRING"
+              }
+            ]
+          }
+        },
+        "name": "executive_metrics",
+        "namespace": "analytics.reporting",
+        "outputFacets": {}
+      }
+    ],
+    "producer": "https://github.com/Soumyadeep-github/Observability-platform",
+    "run": {
+      "facets": {},
+      "runId": "bf182a58-531a-5a80-aca1-f79e985e3783"
+    },
+    "schemaURL": "https://openlineage.io/spec/2-0-2/OpenLineage.json#/$defs/RunEvent"
+  }
+]

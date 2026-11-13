@@ -1,5 +1,7 @@
 # Release 1 — Python-first, cloud-native data observability
 
+> Historical design proposal. For the implemented POC and current run instructions, see the [project README](../../README.md).
+
 29 October 2026 · Design proposal · No application implementation is included
 
 This proposal narrows the original platform architecture and extends the security design. It is the proposed release-specific decision record where older documents leave alternatives open. Interfaces and configuration examples here belong to this project unless explicitly identified as an upstream standard. Compatibility claims require a pinned-version integration test before release.
@@ -44,7 +46,7 @@ Candidate validation baseline: one supported Airflow major, Spark 3.5.x Structur
 
 ## 3. Deployment architecture
 
-See release1_architecture.svg for an immediately viewable diagram and release1_architecture.drawio for two editable pages: logical architecture and availability/delivery. Open the .drawio file at https://app.diagrams.net/ using File → Open From → Device. The HTML viewer includes both diagrams without network dependencies.
+See diagrams/release1_architecture.svg for an immediately viewable diagram and diagrams/release1_architecture.drawio for two editable pages: logical architecture and availability/delivery. Open the .drawio file at https://app.diagrams.net/ using File → Open From → Device. The HTML viewer includes both diagrams without network dependencies.
 
 Four process roles share one source repository and release version:
 
