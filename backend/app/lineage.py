@@ -1,6 +1,5 @@
-"""Marquez HTTP adapter. Marquez owns OpenLineage validation, storage and graph traversal."""
+"""Marquez HTTP adapter. Adapter for the optional historical demo."""
 import json
-from pathlib import Path
 from typing import Literal, Optional
 from urllib.parse import urlsplit, quote
 from uuid import UUID
@@ -22,7 +21,7 @@ class RunIdentity(BaseModel):
 
 
 class RunEventEnvelope(BaseModel):
-    """Bounded RunEvent envelope only; Marquez validates the full specification.
+    """RunEvent identity and timestamp validation for ingestion.
 
     Extra facets/extensions survive forwarding. Schema URLs are metadata and are
     never fetched by this application. DatasetEvent/JobEvent are not supported by
@@ -156,8 +155,3 @@ class MarquezGateway:
             return graph.model_dump(mode='json')
         except ValueError as exc:
             raise HTTPException(502, 'Marquez returned an unsupported graph response') from exc
-
-
-DEMO_GRAPH = json.loads(Path(__file__).with_name('demo_lineage.json').read_text())
-
-DEMO_COLUMNS = json.loads(Path(__file__).with_name('demo_columns.json').read_text())

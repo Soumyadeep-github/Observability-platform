@@ -1,3 +1,5 @@
+> Historical demo guide. The live service stores run events and field edges in the workspace database. See the [current release design](design/release1_design.md).
+
 # Marquez and OpenLineage integration
 
 The TypeScript UI renders a flow of **dataset → job → dataset**, preserving Marquez IDs and edges. Jobs are explicit objects. Edges come only from the returned graph. Layout and routed edge coordinates reuse Marquez's Apache-2.0 `useLayout` module (0.50.0, commit `4984ca939b3a6f59e1092c6397702eb1e53ff1cc`) with ELK; D3 provides zoom/pan. Rendering cards and integration controls belong to this project. This is not a fork of the full Marquez web application.

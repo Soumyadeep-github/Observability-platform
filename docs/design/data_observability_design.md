@@ -1,5 +1,7 @@
 # Data observability platform architecture
 
+> Superseded for Release 1. The [release decision](release1_design.md) governs connector scope, serving, storage, agent access and evidence contracts. This document preserves earlier alternatives.
+
 > Historical design proposal. For the implemented POC and current run instructions, see the [project README](../../README.md).
 
 28 October 2026 | Version 1.1
@@ -70,7 +72,7 @@ Build an open source data observability application with a modular backend, a Ty
 
 The platform inventories assets and columns, displays upstream and downstream dependencies, tracks execution and publication, evaluates freshness, presents dataset and column quality results, versions schemas and lineage, and reconstructs historical state for a configurable window of at least 30 days. Airflow, external connectors, scripts and MCP clients use the same authorized application services.
 
-This document is a proposed implementation blueprint, version 1.0, dated 28 October 2026, prepared for Soumyadeep Mukhopadhyay. It distinguishes existing standards from project-defined extensions. Example endpoints, YAML, SQL and tool names are proposals, not existing product contracts. This is a design rather than a tested implementation or capacity guarantee.
+This document is a proposed implementation blueprint, version 1.0, dated 28 October 2026. It distinguishes existing standards from project-defined extensions. Example endpoints, YAML, SQL and tool names are proposals, not existing product contracts. This is a design rather than a tested implementation or capacity guarantee.
 
 Recommendation: own the observation history and health evaluation; reuse OpenMetadata for catalog ingestion and optionally its existing browsing UI. In the custom TypeScript frontend, present a unified view through a backend facade. OpenMetadata is replaceable through an adapter. Its deployment and search/database requirements remain additional infrastructure and must be included in operational planning.
 

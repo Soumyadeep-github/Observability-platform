@@ -9,9 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 python = ROOT / '.venv' / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
 if not python.exists():
     raise SystemExit('Create .venv and install backend/requirements-dev.txt first; see README.md.')
-if not (ROOT / 'frontend/dist/index.html').exists():
+if os.getenv('OBS_MODE') == 'demo' and not (ROOT / 'frontend/dist/index.html').exists():
     raise SystemExit('Build the UI first: python3 scripts/frontend.py build')
 try:
-    sys.exit(subprocess.call([str(python), '-m', 'uvicorn', 'app.main:create_app', '--factory', '--host', '127.0.0.1', '--port', '8000'], cwd=ROOT / 'backend'))
+    sys.exit(subprocess.call([str(python), '-m', 'uvicorn', 'app.main:create_app', '--factory', '--host', os.getenv('OBS_HOST','127.0.0.1'), '--port', os.getenv('OBS_PORT','8000')], cwd=ROOT / 'backend'))
 except KeyboardInterrupt:
     pass

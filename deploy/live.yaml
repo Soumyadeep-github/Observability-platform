@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: observability
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: observability}
+  template:
+    metadata:
+      labels: {app: observability}
+    spec:
+      automountServiceAccountToken: false
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector: {matchLabels: {app: observability}}
+      containers:
+        - name: api
+          image: observability:local
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 8000}]
+          envFrom: [{secretRef: {name: observability-config}}]
+          readinessProbe: {httpGet: {path: /api/v1/health, port: 8000}}
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+            seccompProfile: {type: RuntimeDefault}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: observability}
+spec:
+  selector: {app: observability}
+  ports: [{port: 8000, targetPort: 8000}]

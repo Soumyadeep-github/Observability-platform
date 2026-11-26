@@ -1,0 +1,6 @@
+**
+!backend/
+!backend/app/
+!backend/app/*.py
+!backend/app/live.html
+!backend/requirements-live.txt
