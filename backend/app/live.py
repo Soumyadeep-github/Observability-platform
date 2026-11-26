@@ -47,6 +47,9 @@ def live_app(db_path=None, *, clock=None, credentials=None):
             ensure(asset)
         at = data.get('observedAt',data.get('publishedAt',received))
         if kind == 'assets':
+            owners=[a['id'] for a in store.records(con,ws,'assets') if a['name']==data['name'] and a['namespace']==data['namespace']]
+            if any(i!=data['id'] for i in owners):
+                raise HTTPException(409,'Namespace and name already registered under a different asset ID')
             put(kind,data['id'],data['id'],received,data)
         elif kind == 'schemas':
             put(kind,key,asset,at,dict(data,evidenceId=key))

@@ -78,7 +78,7 @@ The home screen puts publication age, job outcome, quality and dependency status
 | Alert attribution | Distinct mapped external instances / distinct received instances; report by source. |
 | Monitoring coverage | Assets with an owner, policy, and recent evidence / in-scope assets. Include expected-but-silent assets in denominator. |
 
-Only the current freshness counts are instrumented on the home screen. For a pilot, establish two weeks of baseline on the same assets and schedule. Compare two weeks after enabling the integration, segmented by severity and source, with sample counts and median/p95. Record the monitoring and paging links an operator otherwise had to visit. Retain the integration if impact is identified faster without reducing coverage or increasing page volume. Decide numeric targets with the operator before the pilot.
+The delivery board measures current freshness. The root cause view counts unique mapped alert instances and lists potentially affected downstream assets with partial lineage coverage. For a pilot, establish two weeks of baseline on the same assets and schedule. Compare two weeks after enabling the integration, segmented by severity and source, with sample counts and median/p95. Record the monitoring and paging links an operator otherwise had to visit. Retain the integration if impact is identified faster without reducing coverage or increasing page volume. Decide numeric targets with the operator before the pilot.
 
 ## Storage, retention and capacity
 

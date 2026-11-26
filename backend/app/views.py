@@ -12,7 +12,7 @@ VIEWS = {
  'assets':'id name namespace owner source','lineage':'origin sourceColumn destination targetColumn provenance transformation evidenceId',
  'schema_diff':'assetId field before after observedAt evidenceId','freshness':'assetId status publishedAt ageMinutes freshnessMinutes lastRun quality gates evidenceId',
  'volume':'assetId partition rows objectCount bytes observedAt evidenceId','quality':'assetId checkId column status value observedAt evidenceId',
- 'runs':'namespace job runId status observedAt evidenceId','root_cause':'assetId title status severity observedAt url evidenceId',
+ 'runs':'namespace job runId status observedAt evidenceId','root_cause':'assetId source instanceId title status severity observedAt impactedAssets lineageCoverage url evidenceId',
  'point_in_time':'receivedAt kind evidenceId data','coverage':'assetId publication quality lineage',
 }
 VIEWS = {name:fields.split() for name,fields in VIEWS.items()}
@@ -88,6 +88,11 @@ def report(store,con,ws,name,f,now):
             rows=[r for r in rows if any((d['namespace'],d['name']) in identities for d in r['datasets'])]
     elif name=='root_cause':
         rows=[dict(v,title=v['alertId']) for v in records('alerts')]+[dict(v,status=v['state'],observedAt=v['openedAt']) for v in records('incidents')]
+        edges=store.records(con,ws,'edges')
+        for row in rows:
+            reach=trace(edges,row['assetId'],'','downstream',f.depth) if row.get('assetId') else []
+            row['impactedAssets']=sorted({edge['destination'] for edge in reach if edge['destination']!=row['assetId']})
+            row['lineageCoverage']='partial' if reach else 'unknown'
         rows.sort(key=lambda v:v['observedAt'],reverse=True)
     elif name=='schema_diff':
         previous,rows={},[]
@@ -127,6 +132,14 @@ def report(store,con,ws,name,f,now):
         metrics=[dict(label='Within freshness target',value=f"{sum(r['status']=='fresh' for r in assessed)} / {len(assessed)} assessed"),
                  dict(label='Waiting on a dependency',value=sum(r['status']=='waiting' for r in rows)),
                  dict(label='Unknown freshness',value=sum(r['status']=='unknown' for r in rows))]
+    elif name=='root_cause':
+        instances={}
+        for row in rows:
+            if row.get('source') and row.get('instanceId'):
+                group=instances.setdefault((row['source'],row['instanceId']),[])
+                group.append(row)
+        mapped=sum(any(r.get('assetId') for r in group) for group in instances.values())
+        metrics=[dict(label='Alert instances linked to an asset',value=f'{mapped} / {len(instances)}')]
     return dict(metrics=metrics,view=name,asOf=now,fields=fields,total=len(rows),offset=f.offset,rows=[{k:r.get(k) for k in fields} for r in rows[f.offset:f.offset+f.limit]],coverage='partial' if rows else 'unknown')
 
 def attach_mcp(app,caller,render):
