@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Data operations</title>
+<style>*{box-sizing:border-box}body{margin:0;color:#18343b;background:#f4f7f6;font:16px system-ui,sans-serif}header{background:#12373d;color:white;padding:18px 5vw;display:flex;align-items:center;gap:24px;flex-wrap:wrap}header strong{font-size:21px}main{max-width:1500px;margin:auto;padding:28px 5vw}nav,.filters,form,footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}button,input,select{font:inherit;padding:8px 12px;border:1px solid #9db1b0;border-radius:5px;background:white;color:#18343b}button{cursor:pointer}button:disabled{opacity:.45}nav button[aria-current=true],form button{background:#12665e;color:white}h1{margin:24px 0 8px}#summary{color:#405e61}.panel{margin-top:16px;background:white;border:1px solid #cbd8d6;border-radius:8px;overflow:auto}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:12px;border-bottom:1px solid #dce6e4;vertical-align:top}th{background:#e7efed;font-size:.85rem}footer{margin-top:12px}.bad{color:#a32a12;font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere}dialog{max-width:min(80vw,850px)}a{color:#075e65}#metrics{display:flex;gap:16px;flex-wrap:wrap}#metrics div{background:white;border-top:3px solid #21766d;padding:14px 22px;margin-bottom:16px}#metrics strong{display:block;font-size:24px}[hidden]{display:none!important}</style>
+<header><strong>Data operations</strong><form id="login"><input type="password" id="token" aria-label="Workspace access token" placeholder="Workspace access token" required><button>Connect</button></form></header>
+<main><nav id="nav" aria-label="Platform views"></nav><h1 id="title">Workspace</h1><p id="summary" role="status">Connect to load current evidence.</p>
+<section id="metrics" aria-label="Delivery indicators"></section><form class="filters" id="filter" hidden><input id="q" aria-label="Search" placeholder="Search this view"><input id="asset" placeholder="Asset ID" aria-label="Asset ID"><input id="field" placeholder="Column" aria-label="Column"><select id="direction" aria-label="Lineage direction"><option>upstream</option><option>downstream</option></select><input id="cutoff" aria-label="Evidence received through" placeholder="As of (ISO time with zone)"><button>Apply</button></form>
+<div class="panel"><table><thead id="head"></thead><tbody id="rows"></tbody></table></div>
+<footer><button id="prev" disabled>Previous</button><span id="page"></span><button id="next" disabled>Next</button></footer></main>
+<dialog id="detail"><button id="close">Close</button><pre></pre></dialog>
+<script>
+const el=id=>document.getElementById(id), label=s=>s.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2');
+let key='',view='freshness',offset=0,seq=0,applied={};
+async function get(path){const r=await fetch('/api/v1/'+path,{headers:{Authorization:'Bearer '+key},cache:'no-store'});if(!r.ok)throw Error('Request failed ('+r.status+')');return r.json()}
+function cell(row,tag,value){let n=document.createElement(tag);n.textContent=value;row.append(n);return n}
+async function load(){const id=++seq;try{let data=await get('views/'+view+'?'+new URLSearchParams({...applied,limit:'30',offset:String(offset)}));if(id!==seq)return;
+el('metrics').replaceChildren();for(const m of data.metrics){let d=cell(el('metrics'),'div',m.label);cell(d,'strong',m.value)}el('head').replaceChildren();el('rows').replaceChildren();let h=el('head').insertRow();data.fields.forEach(f=>cell(h,'th',label(f)));
+const groups=new Map();
+for(const r of data.rows){
+let group=null;
+if(view==='schema_diff'){
+ const label=r.assetId+' · '+r.observedAt;
+ if(!groups.has(label)){const row=el('rows').insertRow(),n=row.insertCell();n.colSpan=data.fields.length;const b=cell(n,'button',label);b.setAttribute('aria-expanded','true');const members=[];groups.set(label,members);b.onclick=()=>{const expanded=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',String(!expanded));members.forEach(m=>m.hidden=expanded)}}
+ group=groups.get(label);
+}
+let tr=el('rows').insertRow();if(group)group.push(tr);for(const f of data.fields){const v=r[f],n=cell(tr,'td',v??'—');if(['late','critical','FAIL'].includes(v))n.className='bad';
+if(v && (f==='evidenceId'||typeof v==='object')){n.textContent='';let b=cell(n,'button',f==='evidenceId'?'Evidence':'Details');b.onclick=async()=>{try{let d=f==='evidenceId'?await get('evidence?key='+encodeURIComponent(v)):v;el('detail').querySelector('pre').textContent=JSON.stringify(d,null,2);el('detail').showModal()}catch(e){el('summary').textContent=e.message}}}
+if(f==='url' && /^https?:\/\//i.test(v)){n.textContent='';let a=cell(n,'a','Source');a.href=v;a.rel='noreferrer';a.target='_blank'}}}
+el('summary').textContent=(data.total?data.total+' matching records':'No matching evidence')+' · Updated '+data.asOf+' · Coverage '+data.coverage;
+el('prev').disabled=!offset;el('next').disabled=offset+data.rows.length>=data.total;el('page').textContent=data.total?(offset+1)+'–'+(offset+data.rows.length):'';
+}catch(e){if(id===seq)el('summary').textContent=e.message+' · Live update unavailable'}}
+function select(v){view=v;offset=0;applied={};el('filter').reset();el('field').hidden=el('direction').hidden=v!=='lineage';el('cutoff').hidden=v!=='point_in_time';el('title').textContent=label(v);el('nav').querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.view===v)));load()}
+el('login').onsubmit=async e=>{e.preventDefault();++seq;key=el('token').value;el('token').value='';el('head').replaceChildren();el('rows').replaceChildren();el('nav').replaceChildren();el('metrics').replaceChildren();el('detail').close();el('detail').querySelector('pre').textContent='';try{for(const v of await get('views')){let b=cell(el('nav'),'button',label(v));b.dataset.view=v;b.onclick=()=>select(v)}el('filter').hidden=false;select('freshness')}catch(e){key='';el('summary').textContent=e.message}};
+el('filter').onsubmit=e=>{e.preventDefault();applied={q:el('q').value,asset_id:el('asset').value};if(view==='lineage')Object.assign(applied,{field:el('field').value,direction:el('direction').value});if(view==='point_in_time'&&el('cutoff').value)applied.as_of=el('cutoff').value;offset=0;load()};
+el('prev').onclick=()=>{offset=Math.max(0,offset-30);load()};el('next').onclick=()=>{offset+=30;load()};el('close').onclick=()=>el('detail').close();setInterval(()=>{if(key&&!document.hidden)load()},15000);
+</script></html>

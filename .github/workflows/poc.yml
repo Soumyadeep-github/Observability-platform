@@ -6,6 +6,15 @@ permissions:
   contents: read
 jobs:
   backend:
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: test
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:test@127.0.0.1:5432/postgres
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +23,7 @@ jobs:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: backend/requirements*.txt
-      - run: python -m pip install -r backend/requirements-dev.txt
+      - run: python -m pip install -r backend/requirements-dev.txt -r backend/requirements-live.txt
       - run: python -m pytest -q
         working-directory: backend
   frontend:
@@ -31,3 +40,40 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci --legacy-peer-deps
       - run: npm run check
+  live-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t observability:ci .
+      - name: Load reference evidence through the running container
+        env:
+          OBS_IDENTITIES: '{"ci-ephemeral":{"workspace":"ci","role":"writer"}}'
+          OBS_TOKEN: ci-ephemeral
+          OBS_API: http://127.0.0.1:8000
+        run: |
+          docker run -d --name live -e OBS_IDENTITIES -e OBS_TOKEN -e OBS_API -p 127.0.0.1:8000:8000 observability:ci
+          curl -fsS --retry 20 --retry-all-errors --retry-delay 1 --max-time 3 "$OBS_API/api/v1/health"
+          docker exec -i live python - < scripts/load_reference.py
+          curl -fsS -H "Authorization: Bearer $OBS_TOKEN" "$OBS_API/api/v1/views/freshness" | python -c "import json,sys; row=next(r for r in json.load(sys.stdin)['rows'] if r['assetId']=='summary'); assert (row['lastRun'],row['status'],row['quality'])==('COMPLETE','fresh','FAIL')"
+      - name: Show service logs on failure
+        if: failure()
+        run: docker logs live
+      - name: Check the operator view in Chromium
+        run: |
+          pip install playwright
+          python -m playwright install chromium
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright, expect
+          with sync_playwright() as p:
+              browser = p.chromium.launch()
+              page = browser.new_page()
+              page.goto('http://localhost:8000')
+              page.get_by_label('Workspace access token').fill('ci-ephemeral')
+              page.get_by_role('button', name='Connect', exact=True).click()
+              row = page.get_by_role('row').filter(has_text='summary')
+              expect(row).to_contain_text('COMPLETE')
+              expect(row).to_contain_text('FAIL')
+              row.get_by_role('button', name='Evidence', exact=True).click()
+              expect(page.get_by_role('dialog')).to_contain_text('sink_commit')
+              browser.close()
+          PY

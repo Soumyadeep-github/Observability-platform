@@ -4,8 +4,9 @@ from pathlib import Path
 import httpx
 import pytest
 from fastapi.testclient import TestClient
-from app.main import create_app
-from app.lineage import DEMO_GRAPH, MarquezGateway, RunEventEnvelope
+from app.legacy_demo import create_app
+from app.legacy_demo import DEMO_GRAPH
+from app.lineage import MarquezGateway, RunEventEnvelope
 
 EVENTS = json.loads((Path(__file__).parents[1] / 'app/demo_openlineage.json').read_text())
 
@@ -131,7 +132,7 @@ def test_explicit_multi_input_column_and_unrelated_same_named_columns(tmp_path):
 
 
 def test_fixture_column_edges_are_from_official_openlineage_facets():
-    from app.lineage import DEMO_COLUMNS
+    from app.legacy_demo import DEMO_COLUMNS
     expected = set()
     for event in EVENTS:
         for output in event['outputs']:
@@ -157,7 +158,7 @@ def test_live_schema_supports_datasets_outside_local_catalog(tmp_path):
 
 
 def test_live_column_adapter_uses_native_endpoint_and_downstream_parameter(tmp_path):
-    from app.lineage import DEMO_COLUMNS
+    from app.legacy_demo import DEMO_COLUMNS
     received = []
     def handler(request):
         received.append(request)

@@ -209,3 +209,9 @@ Technical reference points reviewed during design; pin deployment versions befor
 - [GKE Workload Identity Federation](https://docs.cloud.google.com/kubernetes-engine/docs/concepts/workload-identity)
 - [GKE networking best practices](https://docs.cloud.google.com/kubernetes-engine/docs/best-practices/networking)
 - [GKE NetworkPolicy configuration](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/network-policy)
+
+## Live workspace identity and delegated chat
+
+The live service binds a bearer credential to a workspace and a reader or writer role in server-side secret configuration. Every storage key includes the workspace. Readers use GET or read-only MCP tools. Receipt links reapply the same permission check. Use individually issued credentials, TLS, revocation and secret rotation. The historical demonstration is a separate local process.
+
+For production chat, authenticate the human on the chat surface via OIDC. The chat backend exchanges its user grant for a short-lived delegated token with the MCP resource as audience, the human subject, workspace, and read scopes. Bind the grant to the authenticated chat session. MCP validates signature, issuer, audience, expiry and membership, intersects token scope with current resource policy, then scopes the query to that caller. Reject an expired token, a different audience or an unauthorized asset. Record subject, delegated client, workspace, tool, resource IDs and outcome. Keep bearer tokens and raw evidence outside model prompts and logs. The model provider receives a separate provider credential. The live POC implements workspace credentials; delegated OAuth and fine-grained asset entitlements require deployment integration and negative authorization tests.

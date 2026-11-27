@@ -2,7 +2,7 @@ from copy import deepcopy
 from concurrent.futures import ThreadPoolExecutor
 import pytest
 from fastapi.testclient import TestClient
-from app.main import create_app, health, SEED
+from app.legacy_demo import create_app, health, SEED
 
 @pytest.fixture
 def client(tmp_path):

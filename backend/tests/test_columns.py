@@ -3,7 +3,7 @@ from copy import deepcopy
 import sqlite3
 
 from fastapi.testclient import TestClient
-from app.main import create_app, SEED
+from app.legacy_demo import create_app, SEED
 from app.columns import project_columns
 
 
