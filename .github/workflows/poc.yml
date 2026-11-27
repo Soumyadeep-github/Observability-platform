@@ -52,9 +52,12 @@ jobs:
           OBS_API: http://127.0.0.1:8000
         run: |
           docker run -d --name live -e OBS_IDENTITIES -e OBS_TOKEN -e OBS_API -p 127.0.0.1:8000:8000 observability:ci
-          curl -fsS --retry 10 --retry-connrefused "$OBS_API/api/v1/health"
+          curl -fsS --retry 20 --retry-all-errors --retry-delay 1 --max-time 3 "$OBS_API/api/v1/health"
           docker exec -i live python - < scripts/load_reference.py
           curl -fsS -H "Authorization: Bearer $OBS_TOKEN" "$OBS_API/api/v1/views/freshness" | python -c "import json,sys; row=next(r for r in json.load(sys.stdin)['rows'] if r['assetId']=='summary'); assert (row['lastRun'],row['status'],row['quality'])==('COMPLETE','fresh','FAIL')"
+      - name: Show service logs on failure
+        if: failure()
+        run: docker logs live
       - name: Check the operator view in Chromium
         run: |
           pip install playwright
